@@ -2,18 +2,32 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
 
-class UserUpdateForm(forms.ModelForm):
-    # E-posta değiştirilemez, sadece bilgi amaçlı gösterilir
-    email = forms.EmailField(disabled=True, label="E-Posta Adresi")
+class MyCustomSignupForm(forms.Form):
+    # Django'nun bu alanı tanıması için widget'ı RadioSelect olarak bırakıyoruz
+    role = forms.ChoiceField(
+        choices=(('requester', 'Requester'), ('employee', 'Employee')),
+        required=True,
+        initial='requester',
+        widget=forms.RadioSelect
+    )
 
+    def signup(self, request, user):
+        user_role = self.cleaned_data.get('role')
+        # Sinyal tarafından oluşturulan profili güncelle
+        profile, created = Profile.objects.get_or_create(user=user)
+        profile.role = user_role
+        profile.save()
+        # Log kontrolü için (Docker loglarında görünmesi gerekir)
+        print(f"--- DEBUG: {user.username} için kaydedilen rol: {user_role} ---")
+
+
+
+# Diğer formların değişmesine gerek yok, oldukları gibi kalabilirler
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField(disabled=True, label="E-Posta Adresi")
     class Meta:
         model = User
-        # Username alanını çıkardık, sadece isim ve soyisim düzenlenebilir
         fields = ['first_name', 'last_name', 'email']
-        labels = {
-            'first_name': 'Ad',
-            'last_name': 'Soyad',
-        }
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
@@ -21,12 +35,4 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['image', 'bio', 'phone', 'location', 'birth_date', 'website']
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
-            'bio': forms.Textarea(attrs={'rows': 3}),
-        }
-        labels = {
-            'image': 'Profil Resmini Değiştir',
-            'bio': 'Hakkımda',
-            'phone': 'Telefon Numarası',
-            'location': 'Şehir/Konum',
-            'website': 'Kişisel Websitesi',
         }

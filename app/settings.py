@@ -170,6 +170,8 @@ SITE_ID = 1
 # Giriş Yöntemleri: Hem e-posta hem kullanıcı adı kabul edilir
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'user_profile.forms.MyCustomSignupForm'
 # Kayıt Formu: Kullanıcı adı sormaz, sadece e-posta ve şifre ister
 # email* ifadesi e-postayı zorunlu kılar
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']

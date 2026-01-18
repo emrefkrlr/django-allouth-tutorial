@@ -7,16 +7,18 @@
 {% block content %}
 <div class="row justify-content-center py-5">
     <div class="col-md-7 col-lg-6">
-        <div class="card shadow-lg border-0">
+        <div class="card shadow-lg border-0 rounded-3">
             <div class="card-header bg-success text-white text-center py-3">
                 <h4 class="mb-0">Yeni Hesap Oluştur</h4>
             </div>
             <div class="card-body p-4 p-md-5">
-                
                 <div class="row g-2 mb-4">
-                    <div class="col-6">
-                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 shadow-sm">
-                            <i class="bi bi-google text-danger me-1"></i> Google
+                    <div class="col-12 text-center mb-2">
+                        <p class="text-muted small">Hızlıca kayıt olmak için:</p>
+                    </div>
+                    <div class="col-12">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 shadow-sm py-2">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="18" class="me-2"> Google ile Devam Et
                         </a>
                     </div>
                 </div>
@@ -26,25 +28,88 @@
                     <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">Veya Bilgilerinle Kaydol</span>
                 </div>
 
-                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
+                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}
-                    {{ form|crispy }}
+
+                    <div style="display:none;">
+                        {{ form.role }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block text-center fw-bold mb-3">Hesap Türünüzü Seçin</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role_visual" id="visual_requester" value="requester" checked>
+                                <label class="btn btn-outline-success w-100 py-4 shadow-sm h-100 d-flex flex-column align-items-center justify-content-center" for="visual_requester">
+                                    <i class="bi bi-person-up fs-1 mb-2"></i>
+                                    <span class="fw-bold d-block">Requester</span>
+                                    <small class="text-muted text-center mt-1" style="font-size: 0.75rem;">Hizmet Alan / Talep Eden</small>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="role_visual" id="visual_employee" value="employee">
+                                <label class="btn btn-outline-success w-100 py-4 shadow-sm h-100 d-flex flex-column align-items-center justify-content-center" for="visual_employee">
+                                    <i class="bi bi-briefcase fs-1 mb-2"></i>
+                                    <span class="fw-bold d-block">Employee</span>
+                                    <small class="text-muted text-center mt-1" style="font-size: 0.75rem;">Hizmet Veren / Çalışan</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for field in form %}
+                        {% if field.name != 'role' %}
+                            <div class="mb-3">
+                                {{ field|as_crispy_field }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
 
                     {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
 
                     <div class="d-grid gap-2 mt-4">
-                        <button class="btn btn-success btn-lg fw-bold shadow" type="submit">Kayıt İşlemini Tamamla</button>
+                        <button class="btn btn-success btn-lg fw-bold shadow-sm" type="submit">Kayıt İşlemini Tamamla</button>
                     </div>
                 </form>
 
                 <div class="mt-4 text-center">
                     <hr>
-                    <p class="mb-0 text-muted small">Zaten üye misiniz? <a href="{% url 'account_login' %}" class="text-decoration-none fw-bold">Giriş Yapın</a></p>
+                    <p class="mb-0 text-muted small">Zaten üye misiniz? <a href="{% url 'account_login' %}" class="text-decoration-none fw-bold text-success">Giriş Yapın</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const visualRadios = document.querySelectorAll('input[name="role_visual"]');
+        const realRoleInputs = document.querySelectorAll('input[name="role"]');
+
+        visualRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedValue = this.value;
+                realRoleInputs.forEach(input => {
+                    if (input.value === selectedValue) {
+                        input.checked = true;
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    .btn-check:checked + .btn-outline-success {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+        border-width: 2px !important;
+        box-shadow: 0 0 10px rgba(25, 135, 84, 0.2) !important;
+    }
+    .btn-outline-success:hover {
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+    }
+</style>
 {% endblock %}
