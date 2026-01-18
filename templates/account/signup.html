@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+
+{% block title %}Kayıt Ol - DjangoApp{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white text-center py-3">
+                <h4 class="mb-0">Yeni Hesap Oluştur</h4>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-dark w-100 shadow-sm">
+                            <i class="bi bi-google text-danger me-1"></i> Google
+                        </a>
+                    </div>
+                </div>
+
+                <div class="position-relative mb-4">
+                    <hr>
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">Veya Bilgilerinle Kaydol</span>
+                </div>
+
+                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-success btn-lg fw-bold shadow" type="submit">Kayıt İşlemini Tamamla</button>
+                    </div>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <hr>
+                    <p class="mb-0 text-muted small">Zaten üye misiniz? <a href="{% url 'account_login' %}" class="text-decoration-none fw-bold">Giriş Yapın</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

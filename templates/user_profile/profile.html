@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow border-0 text-center p-4 mb-4">
+                <div class="position-relative d-inline-block mx-auto mb-3">
+                    <img id="image-preview" src="{{ user.profile.avatar_url }}" 
+                         class="rounded-circle border border-4 border-primary shadow-sm" 
+                         width="150" height="150" style="object-fit: cover;">
+                </div>
+                <h4 class="mb-1">{{ user.get_full_name|default:user.email }}</h4>
+                <p class="text-muted small">@{{ user.username }}</p>
+                <hr>
+                <div class="text-start small">
+                    <p class="mb-2"><i class="bi bi-envelope-at me-2 text-primary"></i> {{ user.email }}</p>
+                    {% if user.profile.location %}
+                    <p class="mb-2"><i class="bi bi-geo-alt me-2 text-primary"></i> {{ user.profile.location }}</p>
+                    {% endif %}
+                    {% if user.profile.phone %}
+                    <p class="mb-2"><i class="bi bi-telephone me-2 text-primary"></i> {{ user.profile.phone }}</p>
+                    {% endif %}
+                    <p class="mb-0"><i class="bi bi-calendar3 me-2 text-primary"></i> Katılma: {{ user.date_joined|date:"d F Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow border-0 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="mb-0">Profilimi Düzenle</h3>
+                    <span class="badge bg-light text-dark border">Hesap Ayarları</span>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <h5 class="text-primary border-bottom pb-2 mb-3"><i class="bi bi-person-badge me-2"></i>Temel Bilgiler</h5>
+                    <div class="row">
+                        <div class="col-md-6">{{ u_form.first_name|as_crispy_field }}</div>
+                        <div class="col-md-6">{{ u_form.last_name|as_crispy_field }}</div>
+                    </div>
+                    {{ u_form.email|as_crispy_field }}
+
+                    <h5 class="text-primary border-bottom pb-2 mt-4 mb-3"><i class="bi bi-info-circle me-2"></i>Ek Detaylar</h5>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ p_form.image|as_crispy_field }}
+                        </div>
+                    </div>
+                    {{ p_form.bio|as_crispy_field }}
+                    <div class="row">
+                        <div class="col-md-6">{{ p_form.phone|as_crispy_field }}</div>
+                        <div class="col-md-6">{{ p_form.location|as_crispy_field }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">{{ p_form.birth_date|as_crispy_field }}</div>
+                        <div class="col-md-6">{{ p_form.website|as_crispy_field }}</div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="bi bi-check2-circle me-2"></i>Değişiklikleri Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('id_image').onchange = function (evt) {
+        var tgt = evt.target || window.event.srcElement,
+            files = tgt.files;
+        
+        if (FileReader && files && files.length) {
+            var fr = new FileReader();
+            fr.onload = function () {
+                document.getElementById('image-preview').src = fr.result;
+            }
+            fr.readAsDataURL(files[0]);
+        }
+    }
+</script>
+{% endblock %}

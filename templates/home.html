@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Anasayfa - Django Projem{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-7">
+        <h1 class="display-4 fw-bold lh-1 mb-3 text-primary">Django Dünyasına Hoş Geldiniz!</h1>
+        <p class="lead">
+            Bu proje, Django'nun güçlü şablon yapısı ve Bootstrap'in hızlı tasarım yetenekleri ile oluşturuldu. 
+            Buradan kullanıcı girişi yapabilir veya yeni bir hesap oluşturarak sistemin özelliklerini keşfedebilirsiniz.
+        </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Hemen Kaydol</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">Giriş Yap</a>
+        </div>
+    </div>
+    <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg border rounded-3">
+        <img class="rounded-lg-3" src="https://getbootstrap.com/docs/5.3/examples/heroes/bootstrap-docs.png" alt="Hero Image" width="720">
+    </div>
+</div>
+
+<hr class="my-5">
+
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+    <div class="feature col text-center">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3 px-3 py-2 rounded">
+            🚀
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Hızlı</h3>
+        <p>Bootstrap 5 sayesinde web siteniz tüm cihazlarda yıldırım hızında ve uyumlu çalışır.</p>
+    </div>
+    <div class="feature col text-center">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-success bg-gradient fs-2 mb-3 px-3 py-2 rounded">
+            🔒
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Güvenli</h3>
+        <p>Django'nun yerleşik güvenlik özellikleri ile verileriniz her zaman koruma altında.</p>
+    </div>
+    <div class="feature col text-center">
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-warning bg-gradient fs-2 mb-3 px-3 py-2 rounded">
+            🛠️
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Esnek</h3>
+        <p>Blok yapıları sayesinde sayfalarınızı kolayca özelleştirebilir ve genişletebilirsiniz.</p>
+    </div>
+</div>
+{% endblock %}
